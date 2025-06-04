@@ -1,0 +1,5 @@
+{
+    "ConnectionStrings": {
+        "postgress":  "Host=localhost;Port=5432;Database=Clan_DVD_Rental;Username=postgres;Password=superpippo;"
+    }
+}
