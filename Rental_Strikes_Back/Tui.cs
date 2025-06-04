@@ -43,9 +43,17 @@ namespace Rental_Strikes_Back
                 }
                 else if (input == "2")
                 {
-                    ViewActors();
+                    break;
                 }
-                else if (input == "3")
+                else if (input == "10")
+                {
+                    ShowAllActors();
+                }
+                else if (input == "11")
+                {
+                    ShowAllCategories();
+                }
+                else if (input == "13")
                 {
                     Console.WriteLine("Thank you for using Rental Strikes Back!");
                     break;
@@ -58,9 +66,19 @@ namespace Rental_Strikes_Back
             }
         }
 
-        private void ViewActors()
+        private void ShowAllCategories()
         {
-            throw new NotImplementedException();
+            Logic.getAllCategories();
+            foreach (var category in Logic.Context.Categories)
+            {
+                Console.WriteLine($"Category: {category.Name}");
+            }
+        }
+
+        private void ShowAllActors()
+        {
+            Logic.GetAllActors()
+                .ForEach(actor => Console.WriteLine($"Actor: {actor.FirstName} {actor.LastName}"));
         }
 
         private void ViewFilms()
@@ -68,7 +86,7 @@ namespace Rental_Strikes_Back
             var Films = Logic.GetAllFilms();
             foreach (var film in Films)
             {
-                Console.WriteLine($"Title: {film.Title}, Release Year: {film.ReleaseYear}");
+                Console.WriteLine($"Id: {film.FilmId}, Title: {film.Title}, Release Year: {film.ReleaseYear}");
             }
         }
     }
