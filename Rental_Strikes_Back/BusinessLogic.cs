@@ -6,33 +6,33 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Rental_Strikes_Back.Model;
 
-namespace Rental_Strikes_Back
+namespace Rental_Strikes_Back 
 {
-    internal class BusinessLogic
+    internal class BusinessLogic : ILogic
     {
         public ClanDvdRentalContext Context { get; set; } = new ClanDvdRentalContext();
         public BusinessLogic(ClanDvdRentalContext context)
         {
             Context = context;
         }
-        internal List<Film> GetAllFilms()
+        public List<Film> GetAllFilms()
         {
             var List = Context.Films.Include(f => f.FilmActors).ToList();
             return List;
         }
 
-        internal List<Actor> GetAllActors()
+        public List<Actor> GetAllActors()
         {
             var list = Context.Actors.ToList();
             return list;
         }
-        internal List<Category> getAllCategories()
+        public List<Category> getAllCategories()
         {
            var list = Context.Categories.ToList();
             return list;
         }
 
-        internal List<Film> GetMoviesByActorId(int actorId)
+        public List<Film> GetMoviesByActorId(int actorId)
         {
             var movies = Context.Films
                 .Where(f => f.FilmActors.Any(fa => fa.ActorId == actorId))
@@ -40,7 +40,7 @@ namespace Rental_Strikes_Back
             return movies;
         }
 
-        internal List<Film> GetAllComedyFilms()
+        public List<Film> GetAllComedyFilms()
         {
             var movies = Context.Films.
                 Where(f => f.FilmCategories.Any(fc => fc.Category.Name == "Comedy"))
@@ -48,7 +48,7 @@ namespace Rental_Strikes_Back
             return movies;
         }
 
-        internal List<FilmWithCategory> ShowMoviesByGenere()
+        public List<FilmWithCategory> ShowMoviesByGenere()
         {
             var movies = from f in Context.Films
                          join fc in Context.FilmCategories on f.FilmId equals fc.FilmId
@@ -59,7 +59,7 @@ namespace Rental_Strikes_Back
             return movies.ToList();
         }
 
-        internal List<Actor> GetAllComedyActor()
+        public List<Actor> GetAllComedyActor()
         {
             var actors = (from a in Context.Actors
                          join fa in Context.FilmActors on a.ActorId equals fa.ActorId
@@ -74,7 +74,7 @@ namespace Rental_Strikes_Back
             return actors;
         }
 
-        internal List<Film> GetAllMoviesByActor()
+        public List<Film> GetAllMoviesByActor()
         {
             var movies = from f in Context.Films
                          join fa in Context.FilmActors on f.FilmId equals fa.FilmId
@@ -84,7 +84,7 @@ namespace Rental_Strikes_Back
             return movies.ToList();
         }
 
-        internal List<Store> GetStoreNumberByCountry(string? countryName)
+        public List<Store> GetStoreNumberByCountry(string? countryName)
         {
             var stores = from s in Context.Stores
                          join a in Context.Addresses on s.AddressId equals a.AddressId
@@ -96,7 +96,7 @@ namespace Rental_Strikes_Back
             return stores.ToList();
         }
 
-        internal List<Rental> MovieRentalNumber(int id)
+        public List<Rental> MovieRentalNumber(int id)
         {
             var rentals = from f in Context.Films
                           join i in Context.Inventories on f.FilmId equals i.FilmId
@@ -107,7 +107,7 @@ namespace Rental_Strikes_Back
             return rentals.ToList();
         }
 
-        internal List<Tuple<int, string,string, int>> GetActorsByRental()
+        public List<Tuple<int, string,string, int>> GetActorsByRental()
         {
             var actorByRental = Context.Payments
                                        .Include(a => a.Rental)
@@ -130,7 +130,7 @@ namespace Rental_Strikes_Back
             return actorByRental;
         }
 
-        internal List<Tuple<Film, decimal>> GetMoviesByRentalIncome()
+        public List<Tuple<Film, decimal>> GetMoviesByRentalIncome()
         {
             var moviesByRentalIncome = Context.Films
                 .Include(f => f.Inventories)
@@ -147,7 +147,7 @@ namespace Rental_Strikes_Back
             return moviesByRentalIncome;
         }
 
-        internal class FilmWithCategory
+        public class FilmWithCategory
         {
             public Film Film { get; set; }
             public Category Category { get; set; }

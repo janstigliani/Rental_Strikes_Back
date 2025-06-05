@@ -5,7 +5,7 @@ using Rental_Strikes_Back.Model;
 
 namespace Rental_Strikes_Back;
 
-public partial class ClanDvdRentalContext : DbContext
+public partial class ClanDvdRentalContext : IContext
 {
 
     public DbSet<Actor> Actors { get; set; }
