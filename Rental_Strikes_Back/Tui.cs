@@ -4,6 +4,8 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using Rental_Strikes_Back.Model;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Rental_Strikes_Back
 {
@@ -49,9 +51,29 @@ namespace Rental_Strikes_Back
                 {
                     ShowComedyActors();
                 }
+                else if (input == "4")
+                {
+                    showStoreNumeberByCountry();
+                }
+                else if (input == "5")
+                {
+                    ShowMoviesRentalNumber();
+                }
+                else if (input == "6")
+                {
+                    ShowActorByRental();
+                }
+                else if (input == "7")
+                {
+                    ShowMoviesByRentalIncome();
+                }
                 else if (input == "8")
                 {
                     ShowFilmByGenere();
+                }
+                else if (input == "9")
+                {
+                    ShowAllMoviesByActor();
                 }
                 else if (input == "10")
                 {
@@ -74,8 +96,26 @@ namespace Rental_Strikes_Back
                 {
                     Console.WriteLine("Invalid option, please try again.");
                 }
-
             }
+        }
+
+        private void ShowMoviesByRentalIncome()
+        {
+            var movies = Logic.GetMoviesByRentalIncome();
+            foreach (var movie in movies)
+            {
+                Console.WriteLine($"Id: {movie.Item1.FilmId}, Title: {movie.Item1.Title}, Release Year: {movie.Item1.ReleaseYear}, Rental Income: {movie.Item2:C}");
+            }
+        }
+
+        private void ShowActorByRental()
+        {
+            var actors = Logic.GetActorsByRental();
+            foreach (var actor in actors)
+            {
+                Console.WriteLine($"Id: {actor.Item1}, First Name: {actor.Item2}, Last Name: {actor.Item3}, Rental Count: {actor.Item4}");
+            }
+
         }
 
         private void ShowFilms()
@@ -98,16 +138,45 @@ namespace Rental_Strikes_Back
 
         private void ShowComedyActors()
         {
-            throw new NotImplementedException();
+            var comedyActors = Logic.GetAllComedyActor();
+            foreach (var actor in comedyActors)
+            {
+                Console.WriteLine($"Id: {actor.ActorId}, First Name: {actor.LastName}, Last Name: {actor.FirstName}");
+            }
         }
 
+        private void showStoreNumeberByCountry()
+        {
+            Console.WriteLine("Insert the name of the Country");
+            var countryName = Console.ReadLine();
+            var stores = Logic.GetStoreNumberByCountry(countryName);
+            Console.WriteLine(stores.Count());
+        }
+
+        private void ShowMoviesRentalNumber()
+        {
+            Console.WriteLine("Insert the id of the film");
+            var moviesId = Console.ReadLine();
+            var id = int.TryParse(moviesId, out var idMov) ? idMov : -1;
+            var rental = Logic.MovieRentalNumber(id);
+            Console.WriteLine(rental.Count());
+        }
 
         private void ShowFilmByGenere()
         {
             var movies = Logic.ShowMoviesByGenere();
             foreach (var film in movies)
             {
-                Console.WriteLine($"Id: {film.FilmId}, Title: {film.Title}, Release Year: {film.ReleaseYear}, Genere: {film.CategoryId}");
+                Console.WriteLine($"Id: {film.Film.FilmId}, Title: {film.Film.Title}, Release Year: {film.Film.ReleaseYear}, Category: {film.Category.Name}");
+            }
+        }
+
+        private void ShowAllMoviesByActor()
+        {
+            var films = Logic.GetAllMoviesByActor();
+            foreach (var film in films)
+            {
+                Console.WriteLine($"Id: {film.FilmId}, Title: {film.Title}, Release Year: {film.ReleaseYear}");
             }
         }
 
@@ -128,13 +197,27 @@ namespace Rental_Strikes_Back
 
         private void ShowActorsMovies()
         {
-            Console.WriteLine("Insert the actor ID:");
-            var idString = Console.ReadLine();
-            var actorId = int.TryParse(idString, out var id) ? id : -1;
-            var movies = Logic.GetMoviesByActorId(actorId);
+            //Console.WriteLine("Insert the actor ID:");
+            //var idString = Console.ReadLine();
+            //var actorId = int.TryParse(idString, out var id) ? id : -1;
+            //var movies = Logic.GetMoviesByActorId(actorId);
+            //foreach (var movie in movies)
+            //{
+            //    Console.WriteLine($"{movie.FilmId} - {movie.Title}");
+            //}
+
+            var movies = Logic.GetAllFilms();
+            var actors = Logic.GetAllActors();
+
             foreach (var movie in movies)
             {
-                Console.WriteLine($"{movie.FilmId} - {movie.Title}");
+                Console.WriteLine($"Movie: {movie.Title}");
+                var actorsIds = movie.FilmActors.Select(fa => fa.ActorId).ToList();
+                var movieActors = actors.Where(a => actorsIds.Contains(a.ActorId)).ToList();
+                foreach (var actor in movieActors)
+                {
+                    Console.WriteLine($"  Actor: {actor.FirstName} {actor.LastName}");
+                }
             }
         }
     }
