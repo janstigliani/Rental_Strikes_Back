@@ -17,7 +17,7 @@ namespace Rental_Strikes_Back
 
         public void Run()
         {
-     
+
             while (true)
             {
                 Console.WriteLine("Welcome to CleanRental!");
@@ -39,11 +39,19 @@ namespace Rental_Strikes_Back
                 var input = Console.ReadLine();
                 if (input == "1")
                 {
-                    ViewFilms();
+                    ShowFilms();
                 }
                 else if (input == "2")
                 {
-                    break;
+                    ShowComedyMovies();
+                }
+                else if (input == "3")
+                {
+                    ShowComedyActors();
+                }
+                else if (input == "8")
+                {
+                    ShowFilmByGenere();
                 }
                 else if (input == "10")
                 {
@@ -52,6 +60,10 @@ namespace Rental_Strikes_Back
                 else if (input == "11")
                 {
                     ShowAllCategories();
+                }
+                else if (input == "12")
+                {
+                    ShowActorsMovies();
                 }
                 else if (input == "13")
                 {
@@ -63,6 +75,39 @@ namespace Rental_Strikes_Back
                     Console.WriteLine("Invalid option, please try again.");
                 }
 
+            }
+        }
+
+        private void ShowFilms()
+        {
+            var Films = Logic.GetAllFilms();
+            foreach (var film in Films)
+            {
+                Console.WriteLine($"Id: {film.FilmId}, Title: {film.Title}, Release Year: {film.ReleaseYear}");
+            }
+        }
+
+        private void ShowComedyMovies()
+        {
+            var movies = Logic.GetAllComedyFilms();
+            foreach (var film in movies)
+            {
+                Console.WriteLine($"Id: {film.FilmId}, Title: {film.Title}, Release Year: {film.ReleaseYear}");
+            }
+        }
+
+        private void ShowComedyActors()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        private void ShowFilmByGenere()
+        {
+            var movies = Logic.ShowMoviesByGenere();
+            foreach (var film in movies)
+            {
+                Console.WriteLine($"Id: {film.FilmId}, Title: {film.Title}, Release Year: {film.ReleaseYear}, Genere: {film.CategoryId}");
             }
         }
 
@@ -81,12 +126,15 @@ namespace Rental_Strikes_Back
                 .ForEach(actor => Console.WriteLine($"Actor: {actor.FirstName} {actor.LastName}"));
         }
 
-        private void ViewFilms()
+        private void ShowActorsMovies()
         {
-            var Films = Logic.GetAllFilms();
-            foreach (var film in Films)
+            Console.WriteLine("Insert the actor ID:");
+            var idString = Console.ReadLine();
+            var actorId = int.TryParse(idString, out var id) ? id : -1;
+            var movies = Logic.GetMoviesByActorId(actorId);
+            foreach (var movie in movies)
             {
-                Console.WriteLine($"Id: {film.FilmId}, Title: {film.Title}, Release Year: {film.ReleaseYear}");
+                Console.WriteLine($"{movie.FilmId} - {movie.Title}");
             }
         }
     }

@@ -30,5 +30,26 @@ namespace Rental_Strikes_Back
            var list = Context.Categories.ToList();
             return list;
         }
+
+        internal List<Film> GetMoviesByActorId(int actorId)
+        {
+            var movies = Context.Films
+                .Where(f => f.FilmActors.Any(fa => fa.ActorId == actorId))
+                .ToList();
+            return movies;
+        }
+
+        internal List<Film> GetAllComedyFilms()
+        {
+            var movies = Context.Films.
+                Where(f => f.FilmCategories.Any(fc => fc.Category.Name == "Comedy"))
+                .ToList();
+            return movies;
+        }
+
+        internal List<Film> ShowMoviesByGenere()
+        {
+            var movies = Context.Films.OrderBy(f => f.FilmCategories)
+        }
     }
 }
